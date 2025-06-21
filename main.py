@@ -197,6 +197,29 @@ def calculatePosition(currentChapter, currentPosition, allDurations):
     pos += currentPosition
     return pos
 
+@app.route('/restore', methods=['POST'])
+def restore():
+    content = request.get_json()
+    if not content or 'crcs' not in content or not isinstance(content['crcs'], list):
+        return jsonify({'error': 'Missing or invalid crcs'}), 400
+
+    crcs = content['crcs']
+    with open("books/books.json", "rt") as f:
+        books = json.load(f)
+
+    result = []
+    for crc in crcs:
+        book = next((b for b in books if b.get('crc') == crc), None)
+        if book:
+            position = book.get('position', 0)
+            chapter = book.get('chapter', 0)
+        else:
+            position = 0
+            chapter = 0
+        result.append({'crc': crc, 'position': position, 'chapter': chapter})
+
+    return jsonify({'data': result})
+
 @app.route('/backup', methods=['POST'])
 def backup():
     # Parse JSON array from request
