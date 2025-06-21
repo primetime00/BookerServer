@@ -200,10 +200,10 @@ def calculatePosition(currentChapter, currentPosition, allDurations):
 @app.route('/restore', methods=['POST'])
 def restore():
     content = request.get_json()
-    if not content or 'crcs' not in content or not isinstance(content['crcs'], list):
-        return jsonify({'error': 'Missing or invalid crcs'}), 400
+    if not content or 'data' not in content or not isinstance(content['data'], list):
+        return jsonify({'error': 'Missing or invalid data'}), 400
 
-    crcs = content['crcs']
+    crcs = content['data']
     with open("books/books.json", "rt") as f:
         books = json.load(f)
 
