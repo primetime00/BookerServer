@@ -1,10 +1,14 @@
-from logging import Logger
+import logging
 
 from werkzeug.wrappers import Request, Response
 import json, os, hashlib, re, time
 from flask import Flask, request, jsonify, send_file, abort
 from mutagen.mp3 import MP3
 from tinytag import TinyTag
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 app = Flask(__name__)
 
 
@@ -238,7 +242,7 @@ def backup():
     # Update books with incoming backup data
     for update in updates:
         for our_book in books:
-            Logger.info(f"Checking book {our_book['crc']} against update {update.get('crc')}")
+            logger.info(f"Checking book {our_book['crc']} against update {update.get('crc')}")
             if our_book['crc'] == update.get('crc'):
                 our_book['position'] = update.get('position', book['position'])
                 our_book['chapter'] = update.get('chapter', book['chapter'])
@@ -246,7 +250,7 @@ def backup():
 
     # Save updated books data
     with open("books/books.json", "wt") as f:
-        [Logger.info(f"writing {b['crc']}: Chapter:{b['chapter']}, Position{b['position']}") for b in books]
+        [logger.info(f"writing {b['crc']}: Chapter:{b['chapter']}, Position{b['position']}") for b in books]
         json.dump(books, f, indent=4)
 
     return jsonify({'status': 'backup complete'})
