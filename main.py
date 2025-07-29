@@ -244,8 +244,8 @@ def backup():
         for our_book in books:
             logger.info(f"Checking book {our_book['crc']} against update {update.get('crc')}")
             if our_book['crc'] == update.get('crc'):
-                our_book['position'] = update.get('position', book['position'])
-                our_book['chapter'] = update.get('chapter', book['chapter'])
+                our_book['position'] = update.get('position', our_book['position'])
+                our_book['chapter'] = update.get('chapter', our_book['chapter'])
                 break
 
     # Save updated books data
