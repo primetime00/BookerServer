@@ -1,3 +1,5 @@
+from logging import Logger
+
 from werkzeug.wrappers import Request, Response
 import json, os, hashlib, re, time
 from flask import Flask, request, jsonify, send_file, abort
@@ -235,14 +237,16 @@ def backup():
 
     # Update books with incoming backup data
     for update in updates:
-        for book in books:
-            if book['crc'] == update.get('crc'):
-                book['position'] = update.get('position', book['position'])
-                book['chapter'] = update.get('chapter', book['chapter'])
+        for our_book in books:
+            Logger.info(f"Checking book {our_book['crc']} against update {update.get('crc')}")
+            if our_book['crc'] == update.get('crc'):
+                our_book['position'] = update.get('position', book['position'])
+                our_book['chapter'] = update.get('chapter', book['chapter'])
                 break
 
     # Save updated books data
     with open("books/books.json", "wt") as f:
+        [Logger.info(f"writing {b['crc']}: Chapter:{b['chapter']}, Position{b['position']}") for b in books]
         json.dump(books, f, indent=4)
 
     return jsonify({'status': 'backup complete'})
