@@ -215,14 +215,17 @@ def restore():
 
     result = []
     for crc in crcs:
-        book = next((b for b in books if b.get('crc') == crc), None)
-        if book:
-            position = book.get('position', 0)
-            chapter = book.get('chapter', 0)
+        logger.info(f"Checking book {crc['crc']}")
+        our_book = next((b for b in books if b.get('crc') == crc), None)
+        if our_book:
+            position = our_book.get('position', 0)
+            chapter = our_book.get('chapter', 0)
+            logger.info(f"Found book {crc['crc']} with position {position} and chapter {chapter}")
+            logger.info(f"Did book have a chapter? {our_book.get('chapter', -1)}")
         else:
             position = 0
             chapter = 0
-        result.append({'crc': crc, 'position': position, 'chapter': chapter})
+        result.append({'crc': crc['crc'], 'position': position, 'chapter': chapter})
 
     return jsonify({'data': result})
 
