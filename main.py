@@ -216,7 +216,7 @@ def restore():
     result = []
     for crc in crcs:
         logger.info(f"Checking book {crc['crc']}")
-        our_book = next((b for b in books if b.get('crc') == crc), None)
+        our_book = next((b for b in books if b.get('crc') == crc['crc']), None)
         if our_book:
             position = our_book.get('position', 0)
             chapter = our_book.get('chapter', 0)
