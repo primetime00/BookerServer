@@ -215,17 +215,18 @@ def restore():
 
     result = []
     for crc in crcs:
-        logger.info(f"Checking book {crc['crc']}")
-        our_book = next((b for b in books if b.get('crc') == crc['crc']), None)
+        crc_id = crc['crc'] if isinstance(crc, dict) else crc
+        logger.info(f"Checking book {crc_id}")
+        our_book = next((b for b in books if b.get('crc') == crc_id), None)
         if our_book:
             position = our_book.get('position', 0)
             chapter = our_book.get('chapter', 0)
-            logger.info(f"Found book {crc['crc']} with position {position} and chapter {chapter}")
+            logger.info(f"Found book {crc_id} with position {position} and chapter {chapter}")
             logger.info(f"Did book have a chapter? {our_book.get('chapter', -1)}")
         else:
             position = 0
             chapter = 0
-        result.append({'crc': crc['crc'], 'position': position, 'chapter': chapter})
+        result.append({'crc': crc_id, 'position': position, 'chapter': chapter})
 
     return jsonify({'data': result})
 
